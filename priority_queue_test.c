@@ -5,9 +5,7 @@
 #include "priority_queue.h"
 
 int main(int argc, char *argv[]) {
-    printf("Getting priority_queue...\n");
     priority_queue *h = priority_queue_new();
-    printf("Have priority_queue...\n");
 
     priority_queue_insert(h, (void *)1);
     priority_queue_insert(h, (void *)10);
@@ -22,13 +20,17 @@ int main(int argc, char *argv[]) {
     priority_queue_insert(h, (void *)6);
     priority_queue_insert(h, (void *)9);
     priority_queue_print(h);
-    printf("Priority Queue Size: %d\n", priority_queue_size(h));
 
+    int previous = (int)priority_queue_next(h);
+    int current = 0;
     while (!priority_queue_empty(h)) {
-        printf("%ld,", priority_queue_delmax(h));
+        current = (int)priority_queue_next(h);
+        if (current > previous) {
+            fprintf(stderr, "Priority Queue is not in order: %d > %d!\n", current, previous);
+            return EXIT_FAILURE;
+        }
+        previous = current;
     }
-    printf("\n");
-    printf("Priority Queue Size: %d\n", priority_queue_size(h));
 
     h = priority_queue_free(h);
     return EXIT_SUCCESS;

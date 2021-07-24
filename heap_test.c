@@ -5,9 +5,7 @@
 #include "heap.h"
 
 int main(int argc, char *argv[]) {
-    printf("Getting heap...\n");
     heap *h = heap_new();
-    printf("Have heap...\n");
 
     heap_insert(h, (void *)1);
     heap_insert(h, (void *)10);
@@ -22,13 +20,17 @@ int main(int argc, char *argv[]) {
     heap_insert(h, (void *)6);
     heap_insert(h, (void *)9);
     heap_print(h);
-    printf("Priority Queue Size: %d\n", heap_size(h));
 
+    int previous = heap_next(h);
+    int current = 0;
     while (!heap_empty(h)) {
-        printf("%ld,", heap_delmin(h));
+        current = heap_next(h);
+        if (current < previous) {
+            fprintf(stderr, "Heap is not in order: %d < %d!\n", current, previous);
+            return EXIT_FAILURE;
+        }
+        previous = current;
     }
-    printf("\n");
-    printf("Priority Queue Size: %d\n", heap_size(h));
 
     h = heap_free(h);
     return EXIT_SUCCESS;

@@ -81,7 +81,7 @@ void heap_insert(heap *h, void *key) {
     heap_swim(h, h->tail);
 }
 
-void *heap_delmin(heap *h) {
+void *heap_next(heap *h) {
     void *key = h->data[1];
     h->data[1] = h->data[h->tail];
     h->data[h->tail--] = 0;

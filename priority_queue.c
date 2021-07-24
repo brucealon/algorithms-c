@@ -81,7 +81,7 @@ void priority_queue_insert(priority_queue *h, void *key) {
     priority_queue_swim(h, h->tail);
 }
 
-void *priority_queue_delmax(priority_queue *h) {
+void *priority_queue_next(priority_queue *h) {
     void *key = h->data[1];
     h->data[1] = h->data[h->tail];
     h->data[h->tail--] = 0;

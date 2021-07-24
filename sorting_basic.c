@@ -165,6 +165,6 @@ int heap_sort_integers(int *integers, int length) {
     }
     int i = 0;
     while (!heap_empty(h) && i < length) {
-        integers[i++] = (int)heap_delmin(h);
+        integers[i++] = (int)heap_next(h);
     }
 }

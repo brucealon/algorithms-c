@@ -18,6 +18,11 @@ count_run: count_change ## Run the already compiled count_change binary
 count_change: count_change.c  ## Compile the count_change binary
 	gcc -g -o count_change count_change.c
 
+count_change_valgrind: count_change  ## Test count_change with valgrind
+	@echo --------------------------------------------------------
+	@valgrind --track-origins=yes --leak-check=full -s ./count_change
+	@echo --------------------------------------------------------
+
 heap_run: heap_test  ## Run the already compiled heap_test binary
 	@echo
 	./heap_test
