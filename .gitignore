@@ -5,4 +5,6 @@ sorting
 sorting_test
 stack_test
 queue_test
+heap_test
+priority_queue_test
 *.o
