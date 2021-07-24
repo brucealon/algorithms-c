@@ -1,0 +1,8 @@
+vgcore.*
+count_change
+two_stack_evaluator
+sorting
+sorting_test
+stack_test
+queue_test
+*.o
