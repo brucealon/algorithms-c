@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "heap.h"
-
 int median_of_3(char *a, int i, int j, int k) {
     return a[i] < a[j] ?
         (a[j] < a[k] ? j : (a[i] < a[k] ? k : i)) :
@@ -158,13 +156,29 @@ int quick_sort_integers(int *integers, int length) {
     return 0;
 }
 
-int heap_sort_integers(int *integers, int length) {
-    heap *h = heap_new();
-    for (int i = 0; i < length; i++) {
-        heap_insert(h, (void *)integers[i]);
+void heap_exchange(int *integers, int idx, int jdx) {
+    int key = integers[idx];
+    integers[idx] = integers[jdx];
+    integers[jdx] = key;
+}
+
+void heap_sink(int *integers, int idx, int last) {
+    while ((idx * 2) < last) {
+        int child = idx * 2;
+        if (child < (last - 1) && integers[child] < integers[child + 1]) child++;
+        if (integers[idx] >= integers[child]) break;
+        heap_exchange(integers, idx, child);
+        idx = child;
     }
-    int i = 0;
-    while (!heap_empty(h) && i < length) {
-        integers[i++] = (int)heap_next(h);
+}
+
+int heap_sort_integers(int *integers, int length) {
+    for (int idx = length / 2; idx >= 0; idx--) {
+        heap_sink(integers, idx, length - 1);
+    }
+    int idx = length - 1;
+    while (idx > 0) {
+        heap_exchange(integers, 0, idx--);
+        heap_sink(integers, 0, idx);
     }
 }
