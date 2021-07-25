@@ -6,34 +6,26 @@
 INTDIR   ?= data
 INTFILES ?= smallW.txt
 INTFILEM ?= mediumW.txt
+INTFILET ?= tinyW.txt
 
 clean:  ## Clean up object files, binaries, and Valgrind cores
 	rm -f `find . -maxdepth 1 -executable -type f`  vgcore.* *.o
 
-count_run: count_change ## Run the already compiled count_change binary
+count_change: count_change.c  ## Compile the count_change binary
+	gcc -g -o count_change count_change.c
+
+count_change_run: count_change ## Run the already compiled count_change binary
 	@echo
 	@./count_change
 	@echo
 
-count_change: count_change.c  ## Compile the count_change binary
-	gcc -g -o count_change count_change.c
-
 count_change_valgrind: count_change  ## Test count_change with valgrind
 	@echo --------------------------------------------------------
-	@valgrind --track-origins=yes --leak-check=full -s ./count_change
+	@valgrind --track-origins=yes --leak-check=full -s ./count_change stack 100
 	@echo --------------------------------------------------------
-
-heap_run: heap_test  ## Run the already compiled heap_test binary
-	@echo
-	./heap_test
-	@echo
-
-heap_test: heap.o heap_test.c
-	gcc -g -o heap_test heap.o heap_test.c
-
-heap_valgrind: heap_test  ## Test the heap library with valgrind
+	@valgrind --track-origins=yes --leak-check=full -s ./count_change array 100
 	@echo --------------------------------------------------------
-	@valgrind --track-origins=yes --leak-check=full -s ./heap_test
+	@valgrind --track-origins=yes --leak-check=full -s ./count_change recursion 100
 	@echo --------------------------------------------------------
 
 help:  ## Default target that shows this help information
@@ -46,74 +38,75 @@ help:  ## Default target that shows this help information
 .c.o:
 	gcc -g -c -o $@ $<
 
-priority_queue_run: priority_queue_test  ## Run the already compiled priority_queue_test binary
+priority_queue_test: priority_queue.o priority_queue_test.c
+	gcc -g -o priority_queue_test priority_queue.o priority_queue_test.c
+
+priority_queue_test_run: priority_queue_test  ## Run the already compiled priority_queue_test binary
 	@echo
 	./priority_queue_test
 	@echo
 
-priority_queue_test: priority_queue.o priority_queue_test.c
-	gcc -g -o priority_queue_test priority_queue.o priority_queue_test.c
-
-priority_queue_valgrind: priority_queue_test  ## Test the priority_queue library with valgrind
+priority_queue_test_valgrind: priority_queue_test  ## Test the priority_queue library with valgrind
 	@echo --------------------------------------------------------
 	@valgrind --track-origins=yes --leak-check=full -s ./priority_queue_test
 	@echo --------------------------------------------------------
 
-queue_run: queue_test ## Run already compiled queue_test binary
-	./queue_test
-
 queue_test: queue_test.c queue.o input.o output.o  ## Test the queue functions
 	gcc -g -o queue_test queue_test.c queue.o input.o output.o
 
-queue_valgrind: queue_test  ## Test the queue library with valgrind
+queue_test_run: queue_test ## Run already compiled queue_test binary
+	./queue_test
+
+queue_test_valgrind: queue_test  ## Test the queue library with valgrind
 	@echo --------------------------------------------------------
 	@valgrind --track-origins=yes --leak-check=full -s ./queue_test
 	@echo --------------------------------------------------------
 
-sort: sorting ## Run already compiled sorting binary
+sorting: sorting.c sorting_basic.o input.o output.o ## Compile and run sorting
+	gcc -g -o sorting sorting.c sorting_basic.o input.o output.o
+
+sorting_run: sorting ## Run already compiled sorting binary
 	@echo
-	./sorting $(INTDIR)/$(INTFILES)
+	./sorting $(INTDIR)/$(INTFILET)
 	@echo
 
-sorting: sorting.c sorting_basic.o input.o output.o heap.o ## Compile and run sorting
-	gcc -g -o sorting sorting.c sorting_basic.o input.o output.o heap.o
+sorting_valgrind: sorting  ## Test the sorting_test binary with valgrind
+	@echo --------------------------------------------------------
+	@valgrind --track-origins=yes --leak-check=full -s ./sorting $(INTDIR)/$(INTFILET)
+	@echo --------------------------------------------------------
 
-sorting_run: sorting_test ## Run already compiled sorting_test binary
+sorting_test: sorting_test.c sorting_basic.o input.o output.o ## Test the sorting functions
+	gcc -g -o sorting_test sorting_test.c sorting_basic.o input.o output.o
+
+sorting_test_run: sorting_test ## Run already compiled sorting_test binary
 	@echo
 	@./sorting_test
 	@echo
 
-sorting_test: sorting_test.c sorting_basic.o input.o output.o heap.o ## Test the sorting functions
-	gcc -g -o sorting_test sorting_test.c sorting_basic.o input.o output.o heap.o
-
-sorting_valgrind: sorting_test  ## Test the sorting_test binary with valgrind
+sorting_test_valgrind: sorting_test  ## Test the sorting_test binary with valgrind
 	@echo --------------------------------------------------------
 	@valgrind --track-origins=yes --leak-check=full -s ./sorting_test
 	@echo --------------------------------------------------------
 
-stack_run: stack_test ## Run the already compiled stack_test binary
+stack_test: stack.o stack_test.c ## Test the stack library
+	gcc -g -o stack_test stack.o stack_test.c
+
+stack_test_run: stack_test ## Run the already compiled stack_test binary
 	@echo
 	./stack_test
 	@echo
 
-stack_test: stack.o stack_test.c ## Test the stack library
-	gcc -g -o stack_test stack.o stack_test.c
-
-stack_valgrind: stack_test  ## Test the stack library with valgrind
+stack_test_valgrind: stack_test  ## Test the stack library with valgrind
 	@echo --------------------------------------------------------
 	@valgrind --track-origins=yes --leak-check=full -s ./stack_test
 	@echo --------------------------------------------------------
 
-test_cc: count_change  ## Test count_change with Valgrind
-	@echo --------------------------------------------------------
-	@valgrind --track-origins=yes --leak-check=full -s ./count_change stack 100
-	@echo --------------------------------------------------------
-	@valgrind --track-origins=yes --leak-check=full -s ./count_change array 100
-	@echo --------------------------------------------------------
-	@valgrind --track-origins=yes --leak-check=full -s ./count_change recursion 100
-	@echo --------------------------------------------------------
+two_stack_evaluator_run: two_stack_evaluator
+	@echo
+	./two_stack_evaluator
+	@echo
 
-test_two: two_stack_evaluator  ## Test two_stack_evaluator with Valgrind
+two_stack_evaluator_valgrind: two_stack_evaluator  ## Test two_stack_evaluator with Valgrind
 	@echo --------------------------------------------------------
 	@valgrind --track-origins=yes --leak-check=full -s ./two_stack_evaluator
 	@echo --------------------------------------------------------
