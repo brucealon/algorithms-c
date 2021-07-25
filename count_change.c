@@ -27,7 +27,7 @@ stack_node *stack_node_new(int amount, int coins) {
     n->next = NULL;
     n->amount = amount;
     n->coins = coins;
-    
+
     return n;
 }
 
@@ -45,7 +45,7 @@ stack *stack_new(short allow_recycle) {
     s->head = NULL;
     s->recycle = NULL;
     s->allow_recycle = allow_recycle;
-    
+
     return s;
 }
 
@@ -130,7 +130,7 @@ void print_stack_nodes(stack_node *node) {
 
 void print_stack(stack *s) {
     stack_node *p = NULL;
-    
+
     if (s == NULL) {
         printf("The stack is empty.\n");
     } else {
@@ -144,7 +144,7 @@ void count_change_stack(int coins[], int numcoins, int amount) {
     int a, c;
     int error;
     int total = 0;
-    
+
     stack_push(workload, amount, numcoins - 1);
     while (!stack_is_empty(workload)) {
         error = stack_pop(workload, &a, &c);
@@ -220,6 +220,7 @@ int main(int argc, char **argv) {
     int function = 0;
     int coin_types[] = {1, 5, 10, 25, 50};
 
+    /* ./count_change <stack|recursion|array> <cents> */
     if (argc == 3) {
         if (strncmp("stack", argv[1], 5) == 0) {
             function = 0;
@@ -230,6 +231,7 @@ int main(int argc, char **argv) {
         }
         change = atoi(argv[2]);
     }
+    /* ./count_change <cents> */
     if (argc == 2) {
         change = atoi(argv[1]);
     }
