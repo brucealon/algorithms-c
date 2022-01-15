@@ -113,3 +113,15 @@ two_stack_evaluator_valgrind: two_stack_evaluator  ## Test two_stack_evaluator w
 
 valgrind:  ## Run all valgrind targets
 	@for target in $$(make help | grep _valgrind | cut -d ' ' -f1) ; do echo Running $$target ; make $$target ; if [ $$? -gt 0 ] ; then exit 1 ; fi done
+
+search_linked_list: search_linked_list.o input.o  ## Test word counting (searching) with a linked list
+	gcc -g -o search_linked_list search_linked_list.o input.o
+
+search_linked_list_valgrind: search_linked_list ## Test search_linked_list with Valgrind
+	@echo --------------------------------------------------------
+	@valgrind --track-origins=yes --leak-check=full -s ./search_linked_list data/tinyTale.txt
+	@echo --------------------------------------------------------
+
+search: search.o input.o
+	gcc -g -o search search.o input.o
+	./search

@@ -1,6 +1,8 @@
 vgcore.*
 count_change
 two_stack_evaluator
+search
+search_linked_list
 sorting
 sorting_test
 stack_test
@@ -8,3 +10,4 @@ queue_test
 heap_test
 priority_queue_test
 *.o
+data/
